@@ -42,7 +42,7 @@ void Sprite::SetClip(int x, int y, int w, int h) {
 
 void Sprite::Render(int x, int y) {
     if (texture != nullptr) {
-        SDL_Rect dstrect = {x, y, clipRect.w, clipRect.h};  // Define o retângulo de destino
+        SDL_Rect dstrect = {x, y, clipRect.w, clipRect.h};
         SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
     }
 }

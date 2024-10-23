@@ -2,6 +2,8 @@
 // Created by victor_moraes on 22/10/24.
 //
 
+#pragma once
+
 #ifndef GAME_SPRITE_H
 #define GAME_SPRITE_H
 

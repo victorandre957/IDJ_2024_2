@@ -2,6 +2,8 @@
 // Created by victor_moraes on 22/10/24.
 //
 
+#pragma once
+
 #ifndef GAME_MUSIC_H
 #define GAME_MUSIC_H
 
