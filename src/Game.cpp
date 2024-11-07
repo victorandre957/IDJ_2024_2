@@ -70,11 +70,14 @@ void Game::Run() {
     state->LoadAssets();
 
     while (!state->QuitRequested()) {
-        state->Update(0);
+        state->Update(1);
+
+        SDL_RenderClear(renderer);
+
         state->Render();
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(33);
+        SDL_Delay(17);
     }
 }
 
@@ -85,5 +88,4 @@ Game& Game::GetInstance() {
                 WINDOW_WIDTH, WINDOW_HEIGHT
         );
     }
-    return *instance;
-}
+    return *instance;}

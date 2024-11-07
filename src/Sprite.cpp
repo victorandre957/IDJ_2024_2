@@ -4,10 +4,11 @@
 
 #include "Sprite.h"
 #include "Game.h"
+#include <iostream>
 
-Sprite::Sprite() : texture(nullptr), width(0), height(0) {}
+Sprite::Sprite() : texture(nullptr), width(0), height(0), frameCountW(1), frameCountH(1), frameWidth(0), frameHeight(0) {}
 
-Sprite::Sprite(std::string file) : texture(nullptr), width(0), height(0) {
+Sprite::Sprite(const std::string& file, int frameCountW, int frameCountH) : texture(nullptr), frameCountW(frameCountW), frameCountH(frameCountH) {
     Open(file);
 }
 
@@ -17,7 +18,7 @@ Sprite::~Sprite() {
     }
 }
 
-void Sprite::Open(std::string file) {
+void Sprite::Open(const std::string& file) {
     if (texture != nullptr) {
         SDL_DestroyTexture(texture);
     }
@@ -30,7 +31,10 @@ void Sprite::Open(std::string file) {
 
     SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 
-    SetClip(0, 0, width, height);
+    frameWidth = width / frameCountW;
+    frameHeight = height / frameCountH;
+
+    SetClip(0, 0, frameWidth, frameHeight);
 }
 
 void Sprite::SetClip(int x, int y, int w, int h) {
@@ -41,18 +45,37 @@ void Sprite::SetClip(int x, int y, int w, int h) {
 }
 
 void Sprite::Render(int x, int y) {
-    if (texture != nullptr) {
-        SDL_Rect dstrect = {x, y, clipRect.w, clipRect.h};
-        SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
-    }
+    SDL_Rect dstrect = { x, y, clipRect.w, clipRect.h };
+    SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
 }
 
-int Sprite::GetWidth() {
-    return width;
+void Sprite::Render(int x, int y, int w, int h) {
+    SDL_Rect dstrect = { x, y, w, h };
+    SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
 }
 
-int Sprite::GetHeight() {
-    return height;
+void Sprite::SetFrame(int frame) {
+    int row = frame / frameCountW;
+    int col = frame % frameCountW;
+    int clipX = col * frameWidth;
+    int clipY = row * frameHeight;
+
+    SetClip(clipX, clipY, frameWidth, frameHeight);
+}
+
+void Sprite::SetFrameCount(int frameCountW, int frameCountH) {
+    this->frameCountW = frameCountW;
+    this->frameCountH = frameCountH;
+    frameWidth = width / frameCountW;
+    frameHeight = height / frameCountH;
+}
+
+int Sprite::GetWidth() const {
+    return frameWidth;
+}
+
+int Sprite::GetHeight() const {
+    return frameHeight;
 }
 
 bool Sprite::IsOpen() {

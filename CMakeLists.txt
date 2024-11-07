@@ -5,13 +5,18 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_executable(Game main.cpp
         src/State.cpp
-        include/State.h
         src/Sprite.cpp
-        include/Sprite.h
         src/Music.cpp
-        include/Music.h
         src/Game.cpp
-        include/Game.h)
+        src/Vec2.cpp
+        src/Rect.cpp
+        src/Component.cpp
+        src/GameObject.cpp
+        src/Animation.cpp
+        src/SpriteRenderer.cpp
+        src/Zombie.cpp
+        src/AnimationSetter.cpp
+)
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)
 

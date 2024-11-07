@@ -14,23 +14,27 @@
 class Sprite {
 public:
     Sprite();
-    Sprite(std::string file);
+    explicit Sprite(const std::string& file, int frameCountW = 1, int frameCountH = 1);
     ~Sprite();
 
-    void Open(std::string file);
+    void Open(const std::string& file);
     void SetClip(int x, int y, int w, int h);
     void Render(int x, int y);
+    void Render(int x, int y, int w, int h);
 
-    int GetWidth();
-    int GetHeight();
+    int GetWidth() const;
+    int GetHeight() const;
     bool IsOpen();
+
+    void SetFrame(int frame);
+    void SetFrameCount(int frameCountW, int frameCountH);
 
 private:
     SDL_Texture* texture;
-    int width;
-    int height;
-    SDL_Rect clipRect;
+    int width{}, height{};
+    int frameCountW, frameCountH;
+    int frameWidth{}, frameHeight{};
+    SDL_Rect clipRect{};
 };
 
-
-#endif //GAME_SPRITE_H
+#endif // GAME_SPRITE_H
