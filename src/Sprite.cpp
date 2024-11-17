@@ -12,18 +12,16 @@ Sprite::Sprite(const std::string& file, int frameCountW, int frameCountH) : text
     Open(file);
 }
 
-Sprite::~Sprite() {
-    if (texture != nullptr) {
-        SDL_DestroyTexture(texture);
-    }
-}
+Sprite::~Sprite() = default;
 
 void Sprite::Open(const std::string& file) {
-    if (texture != nullptr) {
-        SDL_DestroyTexture(texture);
+    texture = Resources::GetImage(file);
+    if (texture) {
+        int width, height;
+        SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+        this->width = width;
+        this->height = height;
     }
-
-    texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
     if (texture == nullptr) {
         printf("Failed to load texture: %s\n", SDL_GetError());
         return;
@@ -44,12 +42,12 @@ void Sprite::SetClip(int x, int y, int w, int h) {
     clipRect.h = h;
 }
 
-void Sprite::Render(int x, int y) {
+void Sprite::Render(int x, int y) const {
     SDL_Rect dstrect = { x, y, clipRect.w, clipRect.h };
     SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
 }
 
-void Sprite::Render(int x, int y, int w, int h) {
+void Sprite::Render(int x, int y, int w, int h) const {
     SDL_Rect dstrect = { x, y, w, h };
     SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
 }

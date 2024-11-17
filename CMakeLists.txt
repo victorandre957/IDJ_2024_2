@@ -16,6 +16,10 @@ add_executable(Game main.cpp
         src/SpriteRenderer.cpp
         src/Zombie.cpp
         src/AnimationSetter.cpp
+        src/TileSet.cpp
+        src/TileMap.cpp
+        src/Sound.cpp
+        src/Resources.cpp
 )
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)

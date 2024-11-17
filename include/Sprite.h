@@ -10,6 +10,7 @@
 #include "SDL_image.h"
 #include "SDL.h"
 #include <string>
+#include "Resources.h"
 
 class Sprite {
 public:
@@ -19,11 +20,11 @@ public:
 
     void Open(const std::string& file);
     void SetClip(int x, int y, int w, int h);
-    void Render(int x, int y);
-    void Render(int x, int y, int w, int h);
+    void Render(int x, int y) const;
+    void Render(int x, int y, int w, int h) const;
 
-    int GetWidth() const;
-    int GetHeight() const;
+    [[nodiscard]] int GetWidth() const;
+    [[nodiscard]] int GetHeight() const;
     bool IsOpen();
 
     void SetFrame(int frame);

@@ -11,6 +11,7 @@
 #include <memory>
 #include "Component.h"
 #include "Rect.h"
+#include "Resources.h"
 
 
 class GameObject {
@@ -23,7 +24,7 @@ public:
 
     void Render();
 
-    bool IsDead() const;
+    [[nodiscard]] bool IsDead() const;
 
     void RequestDelete();
 
@@ -48,7 +49,7 @@ private:
 
     bool isDead;
 
-    Component *GetComponent(const std::string &type);
+    Component *GetComponent(std::string &type);
 };
 
 

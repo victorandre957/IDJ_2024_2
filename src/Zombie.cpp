@@ -5,17 +5,15 @@
 #include "Zombie.h"
 
 Zombie::Zombie(GameObject& associated)
-        : Component(associated), hitpoints(200),  deathDelay(70.0f) {
-
+        : Component(associated), hitpoints(200), deathDelay(70.0f),
+          deathSound("./public/audio/Dead.wav") {
     auto spriteRenderer = std::make_unique<SpriteRenderer>(associated, "./public/img/Enemy.png", 3, 2);
     associated.AddComponent(std::move(spriteRenderer));
 
     auto animationSetter = std::make_unique<AnimationSetter>(associated);
-
     animationSetter->AddAnimation("walking", Animation(0, 3, 10));
     animationSetter->AddAnimation("dying", Animation(3, 5, 10));
     animationSetter->AddAnimation("dead", Animation(5, 5, 0));
-
     animationSetter->SetAnimation("walking");
 
     associated.AddComponent(std::move(animationSetter));
@@ -30,6 +28,9 @@ void Zombie::Damage(int damage) {
             isDying = true;
             animationSetter->SetAnimation("dying");
             deathTimer = 0.0f;
+
+            // Tocar o som de morte
+            deathSound.Play(1);
         }
     }
 }

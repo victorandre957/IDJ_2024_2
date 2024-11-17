@@ -6,7 +6,7 @@
 
 Game* Game::instance = nullptr;
 
-Game::Game(std::string title, int width, int height) {
+Game::Game(const std::string& title, int width, int height) {
     if (instance != nullptr) {
         throw std::runtime_error("A instância de Game já existe!");
     }
@@ -58,6 +58,7 @@ Game::~Game() {
     SDL_Quit();
 }
 
+
 SDL_Renderer* Game::GetRenderer() {
     return renderer;
 }
@@ -79,6 +80,10 @@ void Game::Run() {
         SDL_RenderPresent(renderer);
         SDL_Delay(17);
     }
+
+    Resources::ClearImages();
+    Resources::ClearMusics();
+    Resources::ClearSounds();
 }
 
 Game& Game::GetInstance() {
@@ -88,4 +93,5 @@ Game& Game::GetInstance() {
                 WINDOW_WIDTH, WINDOW_HEIGHT
         );
     }
-    return *instance;}
+    return *instance;
+}

@@ -23,7 +23,7 @@ private:
     SDL_Renderer* renderer;
     State* state;
 
-    Game(std::string title, int width, int height);
+    Game(const std::string& title, int width, int height);
 
 public:
     ~Game();

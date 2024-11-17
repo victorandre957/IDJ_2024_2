@@ -22,7 +22,7 @@ public:
     void Update(float dt) override;
     void Render() override;
     [[nodiscard]] bool Is(const std::string& type) const override;
-    bool IsAnimationFinished() const;
+    [[nodiscard]] bool IsAnimationFinished() const;
     void SetAnimation(Animation anim);
 
 private:

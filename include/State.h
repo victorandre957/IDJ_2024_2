@@ -7,26 +7,27 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
+#include <GameObject.h>
+#include <Sprite.h>
+#include <Music.h>
 #include <vector>
 #include <memory>
-#include "Music.h"
-#include "SDL.h"
-#include "GameObject.h"
 
     class State {
+    private:
+        Music music;
+        std::vector<std::unique_ptr<GameObject>> objectArray;
+
+        bool quitRequested;
     public:
         State();
         ~State();
+
         bool QuitRequested();
         void LoadAssets();
         void Update(float dt);
         void Render();
         void AddObject(GameObject* go);
-
-    private:
-        Music music;
-        bool quitRequested;
-        std::vector<std::unique_ptr<GameObject>> objectArray;
     };
 
 #endif //GAME_STATE_H

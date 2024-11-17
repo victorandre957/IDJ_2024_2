@@ -13,20 +13,22 @@
 #include "SpriteRenderer.h"
 #include "GameObject.h"
 #include "AnimationSetter.h"
+#include "Sound.h"
 
 class Zombie : public Component {
 public:
-    Zombie(GameObject& associated);
+    explicit Zombie(GameObject& associated);
     void Damage(int damage);
     void Update(float dt) override;
     void Render() override;
-    bool Is(const std::string& type) const override;
+    [[nodiscard]] bool Is(const std::string& type) const override;
 
 private:
     int hitpoints;
-    bool isDying;
+    bool isDying{};
     float deathDelay;
-    float deathTimer;
+    float deathTimer{};
+    Sound deathSound;
 };
 
 #endif // GAME_ZOMBIE_H

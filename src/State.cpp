@@ -3,8 +3,9 @@
 //
 
 #include "State.h"
-#include "SpriteRenderer.h"
 #include "Zombie.h"
+#include "TileSet.h"
+#include "TileMap.h"
 
 State::State() : quitRequested(false) {}
 
@@ -15,18 +16,37 @@ State::~State() {
 void State::LoadAssets() {
     music.Open("./public/audio/BGM.wav");
 
-    auto bgObject = std::make_unique<GameObject>();
-    auto bgRenderer = std::make_unique<SpriteRenderer>(*bgObject, "./public/img/Background.png", 1, 1);
-    bgObject->AddComponent(std::move(bgRenderer));
-    AddObject(bgObject.release());
+    auto tileSet = std::make_unique<TileSet>(64, 64, "./public/img/Tileset.png");
+    auto mapObject = std::make_unique<GameObject>();
+    auto tileMap = std::make_unique<TileMap>(*mapObject, "./public/map/map.txt", std::move(tileSet));
 
-    auto zombieObject = std::make_unique<GameObject>();
-    zombieObject->box.x = 600;
-    zombieObject->box.y = 450;
+    mapObject->AddComponent(std::move(tileMap));
+    AddObject(mapObject.release());
 
-    auto zombieComponent = std::make_unique<Zombie>(*zombieObject);
-    zombieObject->AddComponent(std::move(zombieComponent));
-    AddObject(zombieObject.release());
+    auto zombieObject1 = std::make_unique<GameObject>();
+    zombieObject1->box.x = 600;
+    zombieObject1->box.y = 450;
+
+    auto zombieComponent1 = std::make_unique<Zombie>(*zombieObject1);
+    zombieObject1->AddComponent(std::move(zombieComponent1));
+    AddObject(zombieObject1.release());
+
+    auto zombieObject2 = std::make_unique<GameObject>();
+    zombieObject2->box.x = 800;
+    zombieObject2->box.y = 550;
+
+    auto zombieComponent2 = std::make_unique<Zombie>(*zombieObject2);
+    zombieObject2->AddComponent(std::move(zombieComponent2));
+    AddObject(zombieObject2.release());
+
+    auto zombieObject3 = std::make_unique<GameObject>();
+    zombieObject3->box.x = 1000;
+    zombieObject3->box.y = 650;
+
+    auto zombieComponent3 = std::make_unique<Zombie>(*zombieObject3);
+    zombieObject3->AddComponent(std::move(zombieComponent3));
+    AddObject(zombieObject3.release());
+
 }
 
 void State::Update(float dt) {
