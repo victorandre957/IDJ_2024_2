@@ -5,6 +5,8 @@
 #ifndef GAME_ANIMATION_H
 #define GAME_ANIMATION_H
 
+#pragma once
+
 class Animation {
 public:
     Animation(int frameStart, int frameEnd, float frameTime);

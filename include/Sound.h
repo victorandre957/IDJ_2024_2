@@ -5,6 +5,8 @@
 #ifndef GAME_SOUND_H
 #define GAME_SOUND_H
 
+#pragma once
+
 #include <string>
 #include "SDL_mixer.h"
 #include "SDL.h"

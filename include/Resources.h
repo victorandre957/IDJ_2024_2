@@ -5,10 +5,11 @@
 #ifndef GAME_RESOURCES_H
 #define GAME_RESOURCES_H
 
+#pragma once
 
 #include <unordered_map>
 #include <string>
-#include <SDL.h>
+#include "SDL.h"
 #include "SDL_mixer.h"
 #include "SDL_image.h"
 

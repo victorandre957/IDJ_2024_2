@@ -11,6 +11,10 @@
 #include <Sprite.h>
 #include <Music.h>
 #include "InputManager.h"
+#include "Zombie.h"
+#include "TileSet.h"
+#include "TileMap.h"
+#include "Camera.h"
 #include <vector>
 #include <memory>
 

@@ -21,7 +21,7 @@ add_executable(Game main.cpp
         src/Sound.cpp
         src/Resources.cpp
         src/InputManager.cpp
-        include/InputManager.h
+        src/Camera.cpp
 )
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)

@@ -14,6 +14,7 @@
 #include "GameObject.h"
 #include "InputManager.h"
 #include "AnimationSetter.h"
+#include "Camera.h"
 #include "Sound.h"
 
 class Zombie : public Component {
@@ -27,7 +28,7 @@ public:
 private:
     int hitpoints;
     bool isDying{};
-    bool isTakingDamage;
+    bool isTakingDamage{};
     float deathDelay;
     float damageTimer{};
     float deathTimer{};

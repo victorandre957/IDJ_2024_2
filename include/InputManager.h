@@ -5,8 +5,10 @@
 #ifndef GAME_INPUTMANAGER_H
 #define GAME_INPUTMANAGER_H
 
+#pragma once
+
 #include <unordered_map>
-#include <SDL.h>
+#include "SDL.h"
 
 #define LEFT_ARROW_KEY SDLK_LEFT
 #define RIGHT_ARROW_KEY SDLK_RIGHT

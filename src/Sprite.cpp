@@ -6,7 +6,7 @@
 #include "Game.h"
 #include <iostream>
 
-Sprite::Sprite() : texture(nullptr), width(0), height(0), frameCountW(1), frameCountH(1), frameWidth(0), frameHeight(0) {}
+Sprite::Sprite() : texture(nullptr), width(1), height(1), frameCountW(1), frameCountH(1), frameWidth(0), frameHeight(0) {}
 
 Sprite::Sprite(const std::string& file, int frameCountW, int frameCountH) : texture(nullptr), frameCountW(frameCountW), frameCountH(frameCountH) {
     Open(file);
@@ -48,7 +48,12 @@ void Sprite::Render(int x, int y) const {
 }
 
 void Sprite::Render(int x, int y, int w, int h) const {
-    SDL_Rect dstrect = { x, y, w, h };
+    SDL_Rect dstrect;
+    dstrect.x = x + Camera::pos.x;
+    dstrect.y = y + Camera::pos.y;
+    dstrect.w = w;
+    dstrect.h = h;
+
     SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
 }
 

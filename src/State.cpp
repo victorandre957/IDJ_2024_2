@@ -3,9 +3,6 @@
 //
 
 #include "State.h"
-#include "Zombie.h"
-#include "TileSet.h"
-#include "TileMap.h"
 
 State::State() : quitRequested(false) {}
 
@@ -16,17 +13,21 @@ State::~State() {
 void State::LoadAssets() {
     music.Open("./public/audio/BGM.wav");
 
+    auto bgObject = std::make_unique<GameObject>();
+    auto bgRenderer = std::make_unique<SpriteRenderer>(*bgObject, "./public/img/Background.png", 1, 1);
+    bgObject->AddComponent(std::move(bgRenderer));
+    AddObject(bgObject.release());
+
     auto tileSet = std::make_unique<TileSet>(64, 64, "./public/img/Tileset.png");
     auto mapObject = std::make_unique<GameObject>();
     auto tileMap = std::make_unique<TileMap>(*mapObject, "./public/map/map.txt", std::move(tileSet));
 
     mapObject->AddComponent(std::move(tileMap));
     AddObject(mapObject.release());
-
-
 }
 
 void State::Update(float dt) {
+    Camera::Update(dt);
     InputManager& input = InputManager::GetInstance();
 
     if (input.QuitRequested() || input.KeyPress(ESCAPE_KEY)) {
@@ -49,6 +50,13 @@ void State::Update(float dt) {
 
     for (auto& object : objectArray) {
         object->Update(dt);
+    }
+
+    for (const auto& obj : objectArray) {
+        if (obj->GetComponent<Zombie>()) {
+            obj->box.x += Camera::speed.x;
+            obj->box.y += Camera::speed.y;
+        }
     }
 
     auto it = objectArray.begin();
