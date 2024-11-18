@@ -10,8 +10,10 @@
 #include <GameObject.h>
 #include <Sprite.h>
 #include <Music.h>
+#include "InputManager.h"
 #include <vector>
 #include <memory>
+
 
     class State {
     private:

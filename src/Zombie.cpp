@@ -5,13 +5,14 @@
 #include "Zombie.h"
 
 Zombie::Zombie(GameObject& associated)
-        : Component(associated), hitpoints(200), deathDelay(70.0f),
-          deathSound("./public/audio/Dead.wav") {
+        : Component(associated), hitpoints(150), deathDelay(70.0f),
+          deathSound("./public/audio/Dead.wav"), hitSound("./public/audio/Hit0.wav") {
     auto spriteRenderer = std::make_unique<SpriteRenderer>(associated, "./public/img/Enemy.png", 3, 2);
     associated.AddComponent(std::move(spriteRenderer));
 
     auto animationSetter = std::make_unique<AnimationSetter>(associated);
     animationSetter->AddAnimation("walking", Animation(0, 3, 10));
+    animationSetter->AddAnimation("damage", Animation(4, 4, 10));
     animationSetter->AddAnimation("dying", Animation(3, 5, 10));
     animationSetter->AddAnimation("dead", Animation(5, 5, 0));
     animationSetter->SetAnimation("walking");
@@ -22,6 +23,15 @@ Zombie::Zombie(GameObject& associated)
 void Zombie::Damage(int damage) {
     hitpoints -= damage;
 
+    if (!isDying) {
+        auto animationSetter = associated.GetComponent<AnimationSetter>();
+        if (animationSetter) {
+            animationSetter->SetAnimation("damage");
+            isTakingDamage = true;
+            damageTimer = 0.0f;
+        }
+    }
+
     if (hitpoints <= 0 && !isDying) {
         auto animationSetter = associated.GetComponent<AnimationSetter>();
         if (animationSetter) {
@@ -29,16 +39,37 @@ void Zombie::Damage(int damage) {
             animationSetter->SetAnimation("dying");
             deathTimer = 0.0f;
 
-            // Tocar o som de morte
             deathSound.Play(1);
         }
     }
 }
 
 void Zombie::Update(float dt) {
+    InputManager& input = InputManager::GetInstance();
+
     if (!isDying) {
-        Damage(1);
-    } else {
+        if (input.MousePress(LEFT_MOUSE_BUTTON)) {
+            int mouseX = input.GetMouseX();
+            int mouseY = input.GetMouseY();
+            if (associated.box.Contains(Vec2(mouseX, mouseY))) {
+                Damage(50);
+                hitSound.Play(1);
+            }
+        }
+
+        if (isTakingDamage) {
+            damageTimer += dt;
+            if (damageTimer >= 10) {
+                auto animationSetter = associated.GetComponent<AnimationSetter>();
+                if (animationSetter) {
+                    animationSetter->SetAnimation("walking");
+                }
+                isTakingDamage = false;
+            }
+        }
+    }
+
+    if (isDying) {
         auto animationSetter = associated.GetComponent<AnimationSetter>();
         auto spriteRenderer = associated.GetComponent<SpriteRenderer>();
 

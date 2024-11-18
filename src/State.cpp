@@ -23,54 +23,42 @@ void State::LoadAssets() {
     mapObject->AddComponent(std::move(tileMap));
     AddObject(mapObject.release());
 
-    auto zombieObject1 = std::make_unique<GameObject>();
-    zombieObject1->box.x = 600;
-    zombieObject1->box.y = 450;
-
-    auto zombieComponent1 = std::make_unique<Zombie>(*zombieObject1);
-    zombieObject1->AddComponent(std::move(zombieComponent1));
-    AddObject(zombieObject1.release());
-
-    auto zombieObject2 = std::make_unique<GameObject>();
-    zombieObject2->box.x = 800;
-    zombieObject2->box.y = 550;
-
-    auto zombieComponent2 = std::make_unique<Zombie>(*zombieObject2);
-    zombieObject2->AddComponent(std::move(zombieComponent2));
-    AddObject(zombieObject2.release());
-
-    auto zombieObject3 = std::make_unique<GameObject>();
-    zombieObject3->box.x = 1000;
-    zombieObject3->box.y = 650;
-
-    auto zombieComponent3 = std::make_unique<Zombie>(*zombieObject3);
-    zombieObject3->AddComponent(std::move(zombieComponent3));
-    AddObject(zombieObject3.release());
 
 }
 
 void State::Update(float dt) {
-    if (SDL_QuitRequested()) {
+    InputManager& input = InputManager::GetInstance();
+
+    if (input.QuitRequested() || input.KeyPress(ESCAPE_KEY)) {
         quitRequested = true;
     }
 
-    if (music.IsOpen() && Mix_PlayingMusic() == 0) {
-        music.Play(-1);
-    }
-
-    for (const auto & i : objectArray) {
-        i->Update(dt);
-    }
-
-    size_t i = 0;
-    while (i < objectArray.size()) {
-        if (objectArray[i]->IsDead()) {
-            objectArray.erase(objectArray.begin() + i);
-        } else {
-            ++i;
+    if (music.IsOpen()) {
+        if (Mix_PlayingMusic() == 0) {
+            music.Play(-1);
         }
     }
 
+    if (input.MousePress(RIGHT_MOUSE_BUTTON)) {
+        auto zombieObject = std::make_unique<GameObject>();
+        zombieObject->AddComponent(std::make_unique<Zombie>(*zombieObject));
+        zombieObject->box.x = input.GetMouseX();
+        zombieObject->box.y = input.GetMouseY();
+        AddObject(zombieObject.release());
+    }
+
+    for (auto& object : objectArray) {
+        object->Update(dt);
+    }
+
+    auto it = objectArray.begin();
+    while (it != objectArray.end()) {
+        if ((*it)->IsDead()) {
+            it = objectArray.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 void State::Render() {

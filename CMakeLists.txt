@@ -20,6 +20,8 @@ add_executable(Game main.cpp
         src/TileMap.cpp
         src/Sound.cpp
         src/Resources.cpp
+        src/InputManager.cpp
+        include/InputManager.h
 )
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)

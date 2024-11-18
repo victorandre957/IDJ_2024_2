@@ -71,6 +71,7 @@ void Game::Run() {
     state->LoadAssets();
 
     while (!state->QuitRequested()) {
+        InputManager::GetInstance().Update();
         state->Update(1);
 
         SDL_RenderClear(renderer);

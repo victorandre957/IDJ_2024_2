@@ -12,6 +12,7 @@
 #include "Component.h"
 #include "SpriteRenderer.h"
 #include "GameObject.h"
+#include "InputManager.h"
 #include "AnimationSetter.h"
 #include "Sound.h"
 
@@ -26,9 +27,12 @@ public:
 private:
     int hitpoints;
     bool isDying{};
+    bool isTakingDamage;
     float deathDelay;
+    float damageTimer{};
     float deathTimer{};
     Sound deathSound;
+    Sound hitSound;
 };
 
 #endif // GAME_ZOMBIE_H
