@@ -13,10 +13,10 @@ State::~State() {
 void State::LoadAssets() {
     music.Open("./public/audio/BGM.wav");
 
-    auto bgObject = std::make_unique<GameObject>();
-    auto bgRenderer = std::make_unique<SpriteRenderer>(*bgObject, "./public/img/Background.png", 1, 1);
-    bgObject->AddComponent(std::move(bgRenderer));
-    AddObject(bgObject.release());
+//    auto bgObject = std::make_unique<GameObject>();
+//    auto bgRenderer = std::make_unique<SpriteRenderer>(*bgObject, "./public/img/Background.png", 1, 1);
+//    bgObject->AddComponent(std::move(bgRenderer));
+//    AddObject(bgObject.release());
 
     auto tileSet = std::make_unique<TileSet>(64, 64, "./public/img/Tileset.png");
     auto mapObject = std::make_unique<GameObject>();

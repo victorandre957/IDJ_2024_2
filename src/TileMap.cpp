@@ -52,16 +52,25 @@ void TileMap::RenderLayer(int layer) {
         exit(1);
     }
 
+    float parallaxOffsetX = 0;
+    float parallaxOffsetY = 0;
+
+    if (layer == 0) {
+        parallaxOffsetX = Camera::pos.x * 0.1f;
+        parallaxOffsetY = Camera::pos.y * 0.1f;
+    }
+
     for (int y = 0; y < mapHeight; y++) {
         for (int x = 0; x < mapWidth; x++) {
             tileSet->RenderTile(
                     At(x, y, layer),
-                    x * tileSet->GetTileWidth() + associated.box.x,
-                    y * tileSet->GetTileHeight() + associated.box.y
+                    x * tileSet->GetTileWidth() + associated.box.x - parallaxOffsetX,
+                    y * tileSet->GetTileHeight() + associated.box.y - parallaxOffsetY
             );
         }
     }
 }
+
 
 void TileMap::Render() {
     for (int z = 0; z < mapDepth; z++) {

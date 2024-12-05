@@ -9,6 +9,7 @@
 
 #include <Component.h>
 #include <GameObject.h>
+#include "Camera.h"
 #include <TileSet.h>
 #include <vector>
 #include <memory>
