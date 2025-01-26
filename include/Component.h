@@ -21,6 +21,8 @@ public:
 
     virtual void Render() = 0;
 
+    virtual void Start();
+
     virtual bool Is(const std::string& type) const = 0;
 
 protected:

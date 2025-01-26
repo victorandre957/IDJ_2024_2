@@ -14,23 +14,21 @@
 #include "Resources.h"
 
 
-class GameObject {
+class GameObject : public std::enable_shared_from_this<GameObject> {
 public:
     GameObject();
-
     ~GameObject();
 
     void Update(float dt);
-
     void Render();
-
     [[nodiscard]] bool IsDead() const;
-
     void RequestDelete();
+    void Start();
 
-    void AddComponent(std::unique_ptr<Component> cpt);
-
+    void AddComponent(std::shared_ptr<Component> cpt);
     void RemoveComponent(Component* cpt);
+
+    std::weak_ptr<GameObject> AsWeakPtr();
 
     template <typename T>
     T* GetComponent() {
@@ -45,12 +43,12 @@ public:
     Rect box;
 
 private:
-    std::vector<std::unique_ptr<Component>> components;
+    std::vector<std::shared_ptr<Component>> components;
 
     bool isDead;
+    bool started;
 
-    Component *GetComponent(std::string &type);
+    Component* GetComponent(std::string& type);
 };
-
 
 #endif //GAME_GAMEOBJECT_H

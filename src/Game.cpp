@@ -68,7 +68,7 @@ State& Game::GetState() {
 }
 
 void Game::Run() {
-    state->LoadAssets();
+    state->Start();
 
     while (!state->QuitRequested()) {
         InputManager::GetInstance().Update();

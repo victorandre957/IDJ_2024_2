@@ -22,6 +22,10 @@ add_executable(Game main.cpp
         src/Resources.cpp
         src/InputManager.cpp
         src/Camera.cpp
+        src/Character.cpp
+        src/Gun.cpp
+        src/Timer.cpp
+        src/PlayerController.cpp
 )
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)

@@ -15,25 +15,35 @@
 #include "TileSet.h"
 #include "TileMap.h"
 #include "Camera.h"
+#include "Character.h"
 #include <vector>
 #include <memory>
+#include "PlayerController.h"
 
+class State {
+private:
+    Music music;
+    std::vector<std::shared_ptr<GameObject>> objectArray;
+    bool started;
+    bool quitRequested;
 
-    class State {
-    private:
-        Music music;
-        std::vector<std::unique_ptr<GameObject>> objectArray;
+    static State* instance;
+public:
+    State();
+    ~State();
 
-        bool quitRequested;
-    public:
-        State();
-        ~State();
+    bool QuitRequested();
+    void LoadAssets();
+    void Update(float dt);
+    void Render();
 
-        bool QuitRequested();
-        void LoadAssets();
-        void Update(float dt);
-        void Render();
-        void AddObject(GameObject* go);
-    };
+    void Start();
+
+    static State& GetInstance();
+
+    std::weak_ptr<GameObject> AddObject(GameObject* go);
+    std::weak_ptr<GameObject> AddObject(const std::shared_ptr<GameObject>& go);
+    std::weak_ptr<GameObject> GetObjectPtr(GameObject* go);
+};
 
 #endif //GAME_STATE_H

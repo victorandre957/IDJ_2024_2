@@ -5,7 +5,14 @@
 #include "GameObject.h"
 #include "Component.h"
 
-GameObject::GameObject() : isDead(false) {}
+GameObject::GameObject() : isDead(false), started(false) {}
+
+void GameObject::Start() {
+    for (auto& component : components) {
+        component->Start();
+    }
+    started = true;
+}
 
 GameObject::~GameObject() {
     components.clear();
@@ -31,13 +38,16 @@ void GameObject::RequestDelete() {
     isDead = true;
 }
 
-void GameObject::AddComponent(std::unique_ptr<Component> cpt) {
-    components.emplace_back(std::move(cpt));
+void GameObject::AddComponent(std::shared_ptr<Component> cpt) {
+    components.push_back(cpt);
+    if (started) {
+        cpt->Start();
+    }
 }
 
 void GameObject::RemoveComponent(Component* cpt) {
     auto it = std::find_if(components.begin(), components.end(),
-                           [cpt](const std::unique_ptr<Component>& ptr) { return ptr.get() == cpt; });
+                           [cpt](const std::shared_ptr<Component>& ptr) { return ptr.get() == cpt; });
 
     if (it != components.end()) {
         components.erase(it);
@@ -53,3 +63,6 @@ Component* GameObject::GetComponent(std::string& type) {
     return nullptr;
 }
 
+std::weak_ptr<GameObject> GameObject::AsWeakPtr() {
+    return shared_from_this();
+}

@@ -3,20 +3,30 @@
 //
 
 #include "State.h"
+State* State::instance = nullptr;
 
-State::State() : quitRequested(false) {}
+State::State() : quitRequested(false), started(false) {
+    instance = this;
+}
+
+void State::Start() {
+    LoadAssets();
+
+    for (auto& obj : objectArray) {
+        obj->Start();
+    }
+    started = true;
+}
 
 State::~State() {
     objectArray.clear();
+    if (instance == this) {
+        instance = nullptr;
+    }
 }
 
 void State::LoadAssets() {
     music.Open("./public/audio/BGM.wav");
-
-//    auto bgObject = std::make_unique<GameObject>();
-//    auto bgRenderer = std::make_unique<SpriteRenderer>(*bgObject, "./public/img/Background.png", 1, 1);
-//    bgObject->AddComponent(std::move(bgRenderer));
-//    AddObject(bgObject.release());
 
     auto tileSet = std::make_unique<TileSet>(64, 64, "./public/img/Tileset.png");
     auto mapObject = std::make_unique<GameObject>();
@@ -24,6 +34,18 @@ void State::LoadAssets() {
 
     mapObject->AddComponent(std::move(tileMap));
     AddObject(mapObject.release());
+
+    auto characterObject = std::make_unique<GameObject>();
+    auto character = std::make_shared<Character>(*characterObject, "./public/img/Player.png");
+    characterObject->AddComponent(character);
+    characterObject->box.x = 550; // Posição inicial X
+    characterObject->box.y = 400; // Posição inicial Y
+
+    // Adicione a PlayerController ao personagem
+    auto playerController = std::make_shared<PlayerController>(*characterObject);
+    characterObject->AddComponent(playerController);
+
+    AddObject(characterObject.release());
 }
 
 void State::Update(float dt) {
@@ -79,7 +101,28 @@ bool State::QuitRequested() {
     return quitRequested;
 }
 
-void State::AddObject(GameObject* go) {
-    objectArray.emplace_back(std::unique_ptr<GameObject>(go));
+State& State::GetInstance() {
+    return *instance;
 }
 
+std::weak_ptr<GameObject> State::AddObject(GameObject* go) {
+    auto sharedGo = std::shared_ptr<GameObject>(go);
+    return AddObject(sharedGo);
+}
+
+std::weak_ptr<GameObject> State::AddObject(const std::shared_ptr<GameObject>& go) {
+    objectArray.push_back(go);
+    if (started) {
+        go->Start();
+    }
+    return go;
+}
+
+std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* go) {
+    for (auto& sharedGo : objectArray) {
+        if (sharedGo.get() == go) {
+            return sharedGo;
+        }
+    }
+    return std::weak_ptr<GameObject>(); // Retorna um weak_ptr vazio
+}
