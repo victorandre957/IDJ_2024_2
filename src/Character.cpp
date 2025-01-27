@@ -38,15 +38,23 @@ void Character::Start() {
 
 void Character::Update(float dt) {
     auto animationSetter = associated.GetComponent<AnimationSetter>();
+    auto spriteRenderer = associated.GetComponent<SpriteRenderer>();
+
     if (!taskQueue.empty()) {
         Command task = taskQueue.front();
         taskQueue.pop();
-        
+
         if (task.type == Command::CommandType::MOVE) {
             Vec2 direction = task.pos - associated.box.Center();
             speed = direction.Normalize() * linearSpeed;
             if (animationSetter->GetCurrentAnimation() != "walking") {
                 animationSetter->SetAnimation("walking");
+            }
+
+            if (direction.x < 0) {
+                flip = true;
+            } else if (direction.x > 0) {
+                flip = false;
             }
         }
     } else {
@@ -56,10 +64,13 @@ void Character::Update(float dt) {
         }
     }
 
-    associated.box += speed * dt;
+    if(flip) {
+        spriteRenderer->SetFlip(SDL_FLIP_HORIZONTAL);
+    } else {
+        spriteRenderer->SetFlip(SDL_FLIP_NONE);
+    }
 
-    // Update the sprite renderer to progress the animation frames
-    auto spriteRenderer = associated.GetComponent<SpriteRenderer>();
+    associated.box += speed * dt;
 
     if (hp <= 0) {
         if (animationSetter) {

@@ -3,6 +3,8 @@
 //
 
 #include "State.h"
+
+
 State* State::instance = nullptr;
 
 State::State() : quitRequested(false), started(false) {
@@ -70,8 +72,12 @@ void State::Update(float dt) {
         AddObject(zombieObject.release());
     }
 
-    for (auto& object : objectArray) {
-        object->Update(dt);
+    // Sort objects based on their Y position
+    std::sort(objectArray.begin(), objectArray.end(), CompareGameObject);
+
+    // Update all objects
+    for (size_t i = 0; i < objectArray.size(); i++) {
+        objectArray[i]->Update(dt);
     }
 
     for (const auto& obj : objectArray) {
@@ -125,4 +131,8 @@ std::weak_ptr<GameObject> State::GetObjectPtr(GameObject* go) {
         }
     }
     return std::weak_ptr<GameObject>(); // Retorna um weak_ptr vazio
+}
+
+bool State::CompareGameObject(const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b) {
+    return a->box.y < b->box.y;
 }

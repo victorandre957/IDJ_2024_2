@@ -46,7 +46,7 @@ void SpriteRenderer::Update(float dt) {
 
 
 void SpriteRenderer::Render() {
-    sprite.Render(associated.box.x, associated.box.y);
+    sprite.Render(associated.box.x, associated.box.y, associated.angleDeg);
 }
 
 bool SpriteRenderer::Is(const std::string& type) const {
@@ -61,8 +61,26 @@ void SpriteRenderer::SetAnimation(Animation anim) {
     timeElapsed = 0;
 
     sprite.SetFrame(currentFrame);
+    sprite.SetFlip(anim.flip);
 }
 
 bool SpriteRenderer::IsAnimationFinished() const {
     return currentFrame == frameEnd;
+}
+
+void SpriteRenderer::SetScale(float scaleX, float scaleY) {
+    Vec2 oldCenter = associated.box.Center();
+    sprite.SetScale(scaleX, scaleY);
+    associated.box.w = sprite.GetWidth();
+    associated.box.h = sprite.GetHeight();
+    associated.box.Center(oldCenter);
+}
+
+void SpriteRenderer::SetFrame(int frame, SDL_RendererFlip flip) {
+    sprite.SetFrame(frame);
+    sprite.SetFlip(flip);
+}
+
+void SpriteRenderer::SetFlip(SDL_RendererFlip flip) {
+    sprite.SetFlip(flip);
 }

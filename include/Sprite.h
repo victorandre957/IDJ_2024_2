@@ -11,6 +11,7 @@
 #include "SDL.h"
 #include <string>
 #include "Resources.h"
+#include "Vec2.h"
 
 class Sprite {
 public:
@@ -20,8 +21,8 @@ public:
 
     void Open(const std::string& file);
     void SetClip(int x, int y, int w, int h);
-    void Render(int x, int y) const;
-    void Render(int x, int y, int w, int h) const;
+    void Render(int x, int y, double angle = 0.0) const;
+    void Render(int x, int y, int w, int h, double angle = 0.0) const;
 
     [[nodiscard]] int GetWidth() const;
     [[nodiscard]] int GetHeight() const;
@@ -30,12 +31,18 @@ public:
     void SetFrame(int frame);
     void SetFrameCount(int frameCountW, int frameCountH);
 
+    void SetScale(float scaleX, float scaleY);
+    Vec2 GetScale() const;
+    void SetFlip(SDL_RendererFlip flip);
+
 private:
     SDL_Texture* texture;
     int width{}, height{};
     int frameCountW, frameCountH;
     int frameWidth{}, frameHeight{};
     SDL_Rect clipRect{};
+    SDL_RendererFlip flip;
+    Vec2 scale;
 };
 
 #endif // GAME_SPRITE_H

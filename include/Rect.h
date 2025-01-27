@@ -22,10 +22,10 @@ public:
     Rect& operator-=(const Vec2& vec);
 
     Vec2 Center() const;
+    void Center(const Vec2& center); // Add this method
     float CenterDistance(const Rect& other) const;
     bool Contains(const Vec2& point) const;
 
 };
-
 
 #endif //GAME_RECT_H

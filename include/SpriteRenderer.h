@@ -24,6 +24,9 @@ public:
     [[nodiscard]] bool Is(const std::string& type) const override;
     [[nodiscard]] bool IsAnimationFinished() const;
     void SetAnimation(Animation anim);
+    void SetScale(float scaleX, float scaleY);
+    void SetFrame(int frame, SDL_RendererFlip flip);
+    void SetFlip(SDL_RendererFlip flip); // Add this method
 
 private:
     Sprite sprite;
@@ -33,6 +36,5 @@ private:
     int currentFrame;
     float timeElapsed;
 };
-
 
 #endif //GAME_SPRITERENDERER_H

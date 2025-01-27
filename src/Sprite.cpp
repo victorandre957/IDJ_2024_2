@@ -6,9 +6,9 @@
 #include "Game.h"
 #include <iostream>
 
-Sprite::Sprite() : texture(nullptr), width(1), height(1), frameCountW(1), frameCountH(1), frameWidth(0), frameHeight(0) {}
+Sprite::Sprite() : texture(nullptr), width(1), height(1), frameCountW(1), frameCountH(1), frameWidth(0), frameHeight(0), flip(SDL_FLIP_NONE), scale(1, 1) {}
 
-Sprite::Sprite(const std::string& file, int frameCountW, int frameCountH) : texture(nullptr), frameCountW(frameCountW), frameCountH(frameCountH) {
+Sprite::Sprite(const std::string& file, int frameCountW, int frameCountH) : texture(nullptr), frameCountW(frameCountW), frameCountH(frameCountH), flip(SDL_FLIP_NONE), scale(1, 1) {
     Open(file);
 }
 
@@ -42,19 +42,19 @@ void Sprite::SetClip(int x, int y, int w, int h) {
     clipRect.h = h;
 }
 
-void Sprite::Render(int x, int y) const {
-    SDL_Rect dstrect = { x, y, clipRect.w, clipRect.h };
-    SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
+void Sprite::Render(int x, int y, double angle) const {
+    SDL_Rect dstrect = { x, y, static_cast<int>(clipRect.w * scale.x), static_cast<int>(clipRect.h * scale.y) };
+    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect, angle, nullptr, flip);
 }
 
-void Sprite::Render(int x, int y, int w, int h) const {
+void Sprite::Render(int x, int y, int w, int h, double angle) const {
     SDL_Rect dstrect;
     dstrect.x = x + Camera::pos.x;
     dstrect.y = y + Camera::pos.y;
-    dstrect.w = w;
-    dstrect.h = h;
+    dstrect.w = static_cast<int>(w * scale.x);
+    dstrect.h = static_cast<int>(h * scale.y);
 
-    SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect);
+    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstrect, angle, nullptr, flip);
 }
 
 void Sprite::SetFrame(int frame) {
@@ -74,13 +74,26 @@ void Sprite::SetFrameCount(int frameCountW, int frameCountH) {
 }
 
 int Sprite::GetWidth() const {
-    return frameWidth;
+    return static_cast<int>(frameWidth * scale.x);
 }
 
 int Sprite::GetHeight() const {
-    return frameHeight;
+    return static_cast<int>(frameHeight * scale.y);
 }
 
 bool Sprite::IsOpen() {
     return (texture != nullptr);
+}
+
+void Sprite::SetScale(float scaleX, float scaleY) {
+    if (scaleX != 0) scale.x = scaleX;
+    if (scaleY != 0) scale.y = scaleY;
+}
+
+Vec2 Sprite::GetScale() const {
+    return scale;
+}
+
+void Sprite::SetFlip(SDL_RendererFlip flip) {
+    this->flip = flip;
 }

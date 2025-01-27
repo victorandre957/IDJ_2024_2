@@ -52,6 +52,7 @@ private:
     Vec2 speed;
     float linearSpeed;
     int hp;
+    bool flip = false;
     Timer deathTimer;
 };
 

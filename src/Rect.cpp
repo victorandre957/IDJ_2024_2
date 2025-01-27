@@ -32,6 +32,11 @@ Vec2 Rect::Center() const {
     return {x + w / 2, y + h / 2};
 }
 
+void Rect::Center(const Vec2& center) {
+    x = center.x - w / 2;
+    y = center.y - h / 2;
+}
+
 float Rect::CenterDistance(const Rect& other) const {
     return Center().Distance(other.Center());
 }

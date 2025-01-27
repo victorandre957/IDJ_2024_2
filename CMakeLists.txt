@@ -26,6 +26,7 @@ add_executable(Game main.cpp
         src/Gun.cpp
         src/Timer.cpp
         src/PlayerController.cpp
+        src/Bullet.cpp
 )
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)

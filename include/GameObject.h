@@ -13,7 +13,6 @@
 #include "Rect.h"
 #include "Resources.h"
 
-
 class GameObject : public std::enable_shared_from_this<GameObject> {
 public:
     GameObject();
@@ -26,7 +25,7 @@ public:
     void Start();
 
     void AddComponent(std::shared_ptr<Component> cpt);
-    void RemoveComponent(Component* cpt);
+    void RemoveComponent(std::shared_ptr<Component> cpt);
 
     std::weak_ptr<GameObject> AsWeakPtr();
 
@@ -41,6 +40,7 @@ public:
     }
 
     Rect box;
+    double angleDeg;
 
 private:
     std::vector<std::shared_ptr<Component>> components;
@@ -48,7 +48,7 @@ private:
     bool isDead;
     bool started;
 
-    Component* GetComponent(std::string& type);
+    std::shared_ptr<Component> GetComponent(const std::string& type);
 };
 
 #endif //GAME_GAMEOBJECT_H

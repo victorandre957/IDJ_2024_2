@@ -12,9 +12,12 @@
 #include "Component.h"
 #include "Vec2.h"
 #include "Timer.h"
+#include "Bullet.h"
 #include "Sound.h"
+#include "State.h"
 #include "AnimationSetter.h"
 #include "SpriteRenderer.h"
+#include <cmath>
 
 class Gun : public Component {
 public:
@@ -34,6 +37,8 @@ private:
     std::weak_ptr<GameObject> character;
     float angle;
     Vec2 target; // New member variable
+
+    bool flip_gun = false;
 };
 
 #endif //GAME_GUN_H

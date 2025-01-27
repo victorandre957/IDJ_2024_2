@@ -3,8 +3,6 @@
 //
 
 #include "Gun.h"
-#include "iostream"
-using namespace std;
 
 Gun::Gun(GameObject& associated, std::weak_ptr<GameObject> character)
         : Component(associated),
@@ -20,8 +18,8 @@ Gun::Gun(GameObject& associated, std::weak_ptr<GameObject> character)
 
     auto animationSetter = std::make_unique<AnimationSetter>(associated);
     animationSetter->AddAnimation("idle", Animation(0, 0, 0));
-    animationSetter->AddAnimation("shooting", Animation(1, 5, 15));
-
+    animationSetter->AddAnimation("shooting", Animation(1, 2, 10));
+    animationSetter->AddAnimation("reloading", Animation(3, 5, 10));
     animationSetter->SetAnimation("idle");
 
     associated.AddComponent(std::move(animationSetter));
@@ -56,7 +54,21 @@ void Gun::Update(float dt) {
 
         auto animationSetter = associated.GetComponent<AnimationSetter>();
         if (animationSetter && animationSetter->GetCurrentAnimation() == "shooting" && spriteRenderer->IsAnimationFinished()) {
+            reloadSound.Play();
+            animationSetter->SetAnimation("reloading");
+        }
+
+        if(cdTimer.Get()>20) {
             animationSetter->SetAnimation("idle");
+        }
+
+        cdTimer.Update(dt);
+
+        if (angle > M_PI / 2 || angle < -M_PI / 2) {
+            spriteRenderer->SetFlip(SDL_FLIP_HORIZONTAL);
+            associated.angleDeg = sin(angle) * 90 * -1;
+        } else {
+            associated.angleDeg = sin(angle) * 90;
         }
 
     } else {
@@ -76,11 +88,32 @@ bool Gun::Is(const std::string& type) const {
 }
 
 void Gun::Shoot(Vec2 target) {
-    angle = (target - associated.box.Center()).Angle();
-    shotSound.Play();
+    if (cdTimer.Get() > 10) {
+        shotSound.Play();
+        cdTimer.Restart();
 
-    auto animationSetter = associated.GetComponent<AnimationSetter>();
-    if (animationSetter) {
-        animationSetter->SetAnimation("shooting");
+        auto bulletGO = std::make_shared<GameObject>();
+
+        angle = atan2(target.y - associated.box.y, target.x - associated.box.x);
+
+        bulletGO->AddComponent(std::make_shared<Bullet>(*bulletGO, angle, 15, 10, 1000));
+
+        bulletGO->box.Center(associated.box.Center() + Vec2(cos(angle), sin(angle)) * 50);
+
+        bulletGO->angleDeg = (angle - M_PI_2) * 180 / M_PI; // Set the bullet's angle to match the firing direction
+
+        auto spriteRenderer = bulletGO->GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer) {
+            spriteRenderer->SetFlip(SDL_FLIP_VERTICAL);
+        }
+
+        // Add the Bullet GameObject to the game
+        State::GetInstance().AddObject(bulletGO);
+
+        auto animationSetter = associated.GetComponent<AnimationSetter>();
+        if (animationSetter) {
+            animationSetter->SetAnimation("shooting");
+        }
     }
 }

@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "Component.h"
 
-GameObject::GameObject() : isDead(false), started(false) {}
+GameObject::GameObject() : box(), angleDeg(0), isDead(false), started(false) {}
 
 void GameObject::Start() {
     for (auto& component : components) {
@@ -14,9 +14,7 @@ void GameObject::Start() {
     started = true;
 }
 
-GameObject::~GameObject() {
-    components.clear();
-}
+GameObject::~GameObject() = default;
 
 void GameObject::Update(float dt) {
     for (auto& component : components) {
@@ -39,25 +37,20 @@ void GameObject::RequestDelete() {
 }
 
 void GameObject::AddComponent(std::shared_ptr<Component> cpt) {
-    components.push_back(cpt);
+    components.emplace_back(std::move(cpt));
     if (started) {
         cpt->Start();
     }
 }
 
-void GameObject::RemoveComponent(Component* cpt) {
-    auto it = std::find_if(components.begin(), components.end(),
-                           [cpt](const std::shared_ptr<Component>& ptr) { return ptr.get() == cpt; });
-
-    if (it != components.end()) {
-        components.erase(it);
-    }
+void GameObject::RemoveComponent(std::shared_ptr<Component> cpt) {
+    components.erase(std::remove(components.begin(), components.end(), cpt), components.end());
 }
 
-Component* GameObject::GetComponent(std::string& type) {
+std::shared_ptr<Component> GameObject::GetComponent(const std::string& type) {
     for (auto& component : components) {
         if (component->Is(type)) {
-            return component.get();
+            return component;
         }
     }
     return nullptr;

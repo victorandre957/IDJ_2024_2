@@ -1,4 +1,4 @@
-    //
+//
 // Created by victor_moraes on 22/10/24.
 //
 
@@ -19,6 +19,7 @@
 #include <vector>
 #include <memory>
 #include "PlayerController.h"
+#include <algorithm>
 
 class State {
 private:
@@ -28,6 +29,10 @@ private:
     bool quitRequested;
 
     static State* instance;
+
+    // Sorting function
+    static bool CompareGameObject(const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b);
+
 public:
     State();
     ~State();
