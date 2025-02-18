@@ -12,3 +12,5 @@ void Component::Start() {
 }
 
 Component::~Component() = default;
+
+void Component::NotifyCollision(GameObject& other) {}

@@ -25,6 +25,7 @@ public:
     void Center(const Vec2& center); // Add this method
     float CenterDistance(const Rect& other) const;
     bool Contains(const Vec2& point) const;
+    float GetDiagonal() const;
 
 };
 

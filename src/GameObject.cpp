@@ -59,3 +59,10 @@ std::shared_ptr<Component> GameObject::GetComponent(const std::string& type) {
 std::weak_ptr<GameObject> GameObject::AsWeakPtr() {
     return shared_from_this();
 }
+
+void GameObject::NotifyCollision(GameObject& other) {
+    const int size = components.size();
+    for (int i = 0; i < size; i++) {
+        components[i]->NotifyCollision(other);
+    }
+}

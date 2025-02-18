@@ -16,15 +16,20 @@
 #include "AnimationSetter.h"
 #include "Camera.h"
 #include "Sound.h"
+#include "Collider.h"
+#include "Bullet.h"
 
 class Zombie : public Component {
 public:
     explicit Zombie(GameObject& associated);
+    ~Zombie();
     void Damage(int damage);
     void Update(float dt) override;
     void Render() override;
     [[nodiscard]] bool Is(const std::string& type) const override;
+    void NotifyCollision(GameObject& other);
 
+    static int zombieCount;
 private:
     int hitpoints;
     bool isDying{};

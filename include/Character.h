@@ -16,6 +16,7 @@
 #include "SpriteRenderer.h"
 #include "Gun.h"
 #include "State.h"
+#include "Collider.h"
 
 class Command {
 public:
@@ -45,6 +46,7 @@ public:
     std::weak_ptr<GameObject> GetGun() const; // New method
 
     static Character* player;
+    void NotifyCollision(GameObject& other);
 
 private:
     std::weak_ptr<GameObject> gun;

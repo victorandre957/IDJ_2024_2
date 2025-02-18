@@ -25,6 +25,8 @@ public:
 
     virtual bool Is(const std::string& type) const = 0;
 
+    virtual void NotifyCollision(GameObject& other);
+
 protected:
     GameObject& associated;
 };

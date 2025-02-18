@@ -45,3 +45,7 @@ bool Rect::Contains(const Vec2& point) const {
     return (point.x >= x && point.x <= x + w &&
             point.y >= y && point.y <= y + h);
 }
+
+float Rect::GetDiagonal() const {
+    return sqrt(w * w + h * h);
+}

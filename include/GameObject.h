@@ -12,6 +12,7 @@
 #include "Component.h"
 #include "Rect.h"
 #include "Resources.h"
+#include "Collider.h"
 
 class GameObject : public std::enable_shared_from_this<GameObject> {
 public:
@@ -41,6 +42,7 @@ public:
 
     Rect box;
     double angleDeg;
+    void NotifyCollision(GameObject& other);
 
 private:
     std::vector<std::shared_ptr<Component>> components;

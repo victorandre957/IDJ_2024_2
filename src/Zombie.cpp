@@ -4,6 +4,8 @@
 
 #include "Zombie.h"
 
+int Zombie::zombieCount = 0;
+
 Zombie::Zombie(GameObject& associated)
         : Component(associated), hitpoints(150), deathDelay(70.0f),
           deathSound("./public/audio/Dead.wav"), hitSound("./public/audio/Hit0.wav") {
@@ -18,7 +20,14 @@ Zombie::Zombie(GameObject& associated)
     animationSetter->SetAnimation("walking");
 
     associated.AddComponent(std::move(animationSetter));
+    associated.AddComponent(std::make_shared<Collider>(associated));
+    Zombie::zombieCount++;
 }
+
+Zombie::~Zombie() {
+    Zombie::zombieCount--;
+}
+
 
 void Zombie::Damage(int damage) {
     hitpoints -= damage;
@@ -83,12 +92,19 @@ void Zombie::Update(float dt) {
                 }
             }
         }
-    }
-}
+    }}
 
 void Zombie::Render() {
 }
 
 bool Zombie::Is(const std::string& type) const {
     return type == "Zombie";
+}
+
+void Zombie::NotifyCollision(GameObject& other) {
+    if (auto bullet = other.GetComponent<Bullet>()) {
+        if (bullet->targetsPlayer) {
+            hitpoints -= bullet->GetDamage();
+        }
+    }
 }

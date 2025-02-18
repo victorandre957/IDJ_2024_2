@@ -21,6 +21,8 @@ Character::Character(GameObject& associated, const std::string& sprite)
     if (!Character::player) {
         Character::player = this;
     }
+
+    associated.AddComponent(std::make_shared<Collider>(associated));
 }
 
 Character::~Character() {
@@ -97,4 +99,16 @@ Command::Command(CommandType type, float x, float y) : type(type), pos(x, y) {}
 
 std::weak_ptr<GameObject> Character::GetGun() const {
     return gun;
+}
+
+void Character::NotifyCollision(GameObject& other) {
+    if (auto bullet = other.GetComponent<Bullet>()) {
+        if (bullet->targetsPlayer) {
+            hp -= bullet->GetDamage();
+            if (hp <= 0) Camera::Unfollow();
+        }
+    }
+    if (hp <= 0) {
+        Camera::Unfollow();
+    }
 }

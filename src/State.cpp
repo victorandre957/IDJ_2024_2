@@ -72,6 +72,24 @@ void State::Update(float dt) {
         AddObject(zombieObject.release());
     }
 
+    for (size_t i = 0; i < objectArray.size(); ++i) {
+        auto objA = objectArray[i];
+        auto colliderA = objA->GetComponent<Collider>();
+        if (!colliderA) continue;
+
+        for (size_t j = i + 1; j < objectArray.size(); ++j) {
+            auto objB = objectArray[j];
+            auto colliderB = objB->GetComponent<Collider>();
+            if (!colliderB) continue;
+
+            if (Collision::IsColliding(colliderA->box, colliderB->box,
+                                       objA->angleDeg, objB->angleDeg)) {
+                objA->NotifyCollision(*objB);
+                objB->NotifyCollision(*objA);
+            }
+        }
+    }
+
     // Sort objects based on their Y position
     std::sort(objectArray.begin(), objectArray.end(), CompareGameObject);
 

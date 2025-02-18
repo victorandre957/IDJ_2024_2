@@ -20,6 +20,8 @@
 #include <memory>
 #include "PlayerController.h"
 #include <algorithm>
+#include "Collider.h"
+#include "WaveSpawner.h"
 
 class State {
 private:

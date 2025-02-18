@@ -14,6 +14,9 @@
 #include "Resources.h"
 #include <cmath>
 #include "AnimationSetter.h"
+#include "Collider.h"
+#include "Character.h"
+#include "Zombie.h"
 
 class Bullet : public Component {
 public:
@@ -22,7 +25,9 @@ public:
     void Render() override;
     [[nodiscard]] bool Is(const std::string& type) const override;
     int GetDamage();
+    void NotifyCollision(GameObject& other);
 
+    bool targetsPlayer;
 private:
     Vec2 speed;
     float distanceLeft;

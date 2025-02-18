@@ -11,6 +11,7 @@ Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, flo
     auto animationSetter = std::make_unique<AnimationSetter>(associated);
     animationSetter->AddAnimation("idle", Animation(0, 0, 0));
     associated.AddComponent(std::move(animationSetter));
+    associated.AddComponent(std::make_shared<Collider>(associated));
 
 }
 
@@ -34,4 +35,11 @@ bool Bullet::Is(const std::string& type) const {
 
 int Bullet::GetDamage() {
     return damage;
+}
+
+void Bullet::NotifyCollision(GameObject& other) {
+    if ((targetsPlayer && other.GetComponent<Character>()) ||
+        (!targetsPlayer && other.GetComponent<Zombie>())) {
+        associated.RequestDelete();
+    }
 }

@@ -19,6 +19,7 @@
 
 #define LEFT_MOUSE_BUTTON SDL_BUTTON_LEFT
 #define RIGHT_MOUSE_BUTTON SDL_BUTTON_RIGHT
+#define SPACE_BAR SDLK_SPACE
 
 class InputManager {
 public:

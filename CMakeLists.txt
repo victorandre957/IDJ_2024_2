@@ -27,6 +27,10 @@ add_executable(Game main.cpp
         src/Timer.cpp
         src/PlayerController.cpp
         src/Bullet.cpp
+        src/Collider.cpp
+        src/AIController.cpp
+        src/Wave.cpp
+        src/WaveSpawner.cpp
 )
 
 link_libraries(SDL2SDL2_imageSDL2_ttfSDL2_mixer)
